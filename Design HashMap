@@ -1,0 +1,70 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+const int N = 10010; // N is the size of the hash table
+
+vector<pair<int, int>> h[N]; // 'h' is an array of vectors, where each vector stores key-value pairs
+
+// This function calculates the hash value for a given key
+int hashFunc(int key) {
+    return key % N;
+}
+
+// Insert function: Insert a key-value pair into the HashMap
+void insert(int key, int value) {
+    int idx = hashFunc(key); // Calculate the hash index for the given key
+    for (int i = 0; i < h[idx].size(); i++) {
+        if (h[idx][i].first == key) { // Check if the key already exists in the vector
+            h[idx][i].second = value; // Update the value if the key is found
+            return;
+        }
+    }
+    h[idx].push_back({key, value}); // If the key is not found, add it as a new pair
+}
+
+// Get function: Retrieve the value associated with a given key
+int get(int key) {
+    int idx = hashFunc(key); // Calculate the hash index for the given key
+    for (int i = 0; i < h[idx].size(); i++) {
+        if (h[idx][i].first == key) { // Check if the key exists in the vector
+            return h[idx][i].second; // Return the corresponding value
+        }
+    }
+    return -1; // If the key is not found, return -1 to indicate that it doesn't exist
+}
+
+// Delete function: Remove a key-value pair from the HashMap
+void del(int key) {
+    int idx = hashFunc(key); // Calculate the hash index for the given key
+    for (int i = 0; i < h[idx].size(); i++) {
+        if (h[idx][i].first == key) { // Check if the key exists in the vector
+            h[idx].erase(h[idx].begin() + i); // Remove the key-value pair from the vector
+            return;
+        }
+    }
+}
+
+int main() {
+    int n;
+    cin >> n; // Read the number of queries
+
+    while (n--) {
+        int type, key, value;
+        cin >> type; // Read the type of query (1, 2, or 3)
+
+        if (type == 1) {
+            cin >> key >> value; // For type 1 query, read the key and value
+            insert(key, value); // Insert the key-value pair into the HashMap
+        } else if (type == 2) {
+            cin >> key; // For type 2 query, read the key
+            cout << get(key) << endl; // Print the value associated with the key (or -1 if not found)
+        } else {
+            cin >> key; // For type 3 query, read the key
+            del(key); // Delete the key-value pair from the HashMap
+        }
+    }
+
+    return 0;
+}
